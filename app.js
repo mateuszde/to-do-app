@@ -20,6 +20,11 @@ class ToDoList {
 
         document.getElementById('addTaskBtn').addEventListener('click', this.addTask);
         this.inputAddTask = document.getElementById('addTaskInput');
+        this.inputAddTask.addEventListener("keypress", (e) => {
+            if (e.key === 'Enter') {
+                this.addTask(e);
+            }
+        });
         this.taskSection = document.querySelector('.toDoTasks');
     }
 
@@ -56,8 +61,10 @@ class ToDoList {
         deleteButton.addEventListener('click', this.removeTask);
     }
 
-    addTask = (e, task = this.inputAddTask.value, id = Date.now()) => {
+    addTask = (e) => {
         e.preventDefault();
+        const task = this.inputAddTask.value;
+        const id = Date.now();
 
         if (task === '') return alert('Puste polecenie. Wpisz coś co chciałbys zapamiętać.');
         let taskItem = {
@@ -68,11 +75,13 @@ class ToDoList {
 
         this.toDoTasks.push(taskItem);
         this.inputAddTask.value = '';
+        this.inputAddTask.focus();
 
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
 
-    removeTask = (e, taskList = this.toDoTasks) => {
+    removeTask = (e) => {
+        const taskList = this.toDoTasks;
         const idOfTaskToDelete = e.target.parentNode.dataset.key;
 
         for (let i = 0; i < taskList.length; i++) {
@@ -85,7 +94,8 @@ class ToDoList {
         }
     }
 
-    changeStatus = (e, taskList = this.toDoTasks) => {
+    changeStatus = (e) => {
+        const taskList = this.toDoTasks
         const idOfTaskToChange = e.target.parentNode.dataset.key;
 
         //Change class on task
@@ -99,16 +109,7 @@ class ToDoList {
         }
     }
 
-    clearView = () => {
-        const allTasks = document.querySelectorAll('.task');
-        allTasks.forEach(el => {
-            el.remove();
-        })
-    }
-
     render = () => {
-        this.clearView();
-
         const taskList = this.toDoTasks;
 
         for (let i = 0; i < taskList.length; i++) {
