@@ -117,7 +117,6 @@ class ToDoList {
             btn.addEventListener('click', this.removeTask);
         })
     }
-
 }
 
 const toDo = new ToDoList();
