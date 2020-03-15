@@ -1,34 +1,65 @@
 class ToDoList {
     constructor() {
         this.toDoTasks = [
-            // {
-            //     id: 1,
-            //     task: 'kupic 4 bulki',
-            //     completed: false,
-            // },
-            // {
-            //     id: 2,
-            //     task: 'przedluzyc abonament',
-            //     completed: false,
-            // },11`1
-            // {
-            //     id: 3,
-            //     task: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi amet incidunt, mollitia vero doloremque quisquam corporis veritatis eum dolore commodi esse iste ratione nemo. Cumque ad eaque quo. Sapiente, perspiciatis?',
-            //     completed: true,
-            // }
+            {
+                id: 1,
+                task: "zadanie 1",
+                completed: false
+            },
+            {
+                id: 2,
+                task: "zadanie 2",
+                completed: true
+            },
+            {
+                id: 3,
+                task: "zadanie 3",
+                completed: false
+            }
         ];
 
         document.getElementById('addTaskBtn').addEventListener('click', this.addTask);
         this.inputAddTask = document.getElementById('addTaskInput');
         this.taskSection = document.querySelector('.toDoTasks');
+    }
 
-        this.render();
+    createTask = (taskId, task, completed = false) => {
+        //Crate containter for task
+        const taskContainer = document.createElement('div');
+        taskContainer.classList.add('task');
+        this.taskSection.appendChild(taskContainer);
+        taskContainer.dataset.key = taskId;
+
+        //Create task
+        const contentOfTask = document.createElement('p');
+        contentOfTask.classList.add('taskText');
+        contentOfTask.textContent = task;
+        taskContainer.appendChild(contentOfTask);
+
+        //Create checkbox to mark task as completed
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.classList.add('checkbox');
+        checkbox.checked = completed;
+        taskContainer.appendChild(checkbox);
+        checkbox.addEventListener('change', this.changeStatus);
+
+        if (checkbox.checked) {
+            contentOfTask.classList.add('done');
+        }
+
+        //Create button to delete task
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('deleteBtn');
+        deleteButton.textContent = 'usuń';
+        taskContainer.appendChild(deleteButton);
+        deleteButton.addEventListener('click', this.removeTask);
     }
 
     addTask = (e, task = this.inputAddTask.value, id = Date.now()) => {
         e.preventDefault();
 
-        if (task === '') return alert('cos chcialbys zapamietac, nie puste znaki...');
+        if (task === '') return alert('Puste polecenie. Wpisz coś co chciałbys zapamiętać.');
         let taskItem = {
             id: id,
             task: task,
@@ -37,7 +68,8 @@ class ToDoList {
 
         this.toDoTasks.push(taskItem);
         this.inputAddTask.value = '';
-        this.render();
+
+        this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
 
     removeTask = (e, taskList = this.toDoTasks) => {
@@ -46,15 +78,18 @@ class ToDoList {
         for (let i = 0; i < taskList.length; i++) {
             if (taskList[i].id == idOfTaskToDelete) {
                 taskList.splice(i, 1);
+
+                e.target.parentNode.remove();
                 break;
             }
         }
-
-        this.render();
     }
 
     changeStatus = (e, taskList = this.toDoTasks) => {
         const idOfTaskToChange = e.target.parentNode.dataset.key;
+
+        //Change class on task
+        e.target.parentNode.childNodes[0].classList.toggle('done');
 
         for (let i = 0; i < taskList.length; i++) {
             if (taskList[i].id == idOfTaskToChange) {
@@ -62,8 +97,6 @@ class ToDoList {
                 break;
             }
         }
-
-        this.render();
     }
 
     clearView = () => {
@@ -71,52 +104,18 @@ class ToDoList {
         allTasks.forEach(el => {
             el.remove();
         })
-
     }
 
-    render = (taskList = this.toDoTasks) => {
+    render = () => {
         this.clearView();
 
+        const taskList = this.toDoTasks;
+
         for (let i = 0; i < taskList.length; i++) {
-
-            const taskContainer = document.createElement('div');
-            taskContainer.classList.add('task');
-            this.taskSection.appendChild(taskContainer);
-            taskContainer.dataset.key = taskList[i].id;
-
-            const contentOfTask = document.createElement('p');
-            contentOfTask.classList.add('taskText');
-            contentOfTask.textContent = taskList[i].task;
-            taskContainer.appendChild(contentOfTask);
-
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.classList.add('checkbox');
-            checkbox.checked = taskList[i].completed;
-            taskContainer.appendChild(checkbox);
-
-            if (checkbox.checked) {
-                contentOfTask.classList.add('done');
-            }
-
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('deleteBtn');
-            deleteButton.textContent = 'usuń';
-            taskContainer.appendChild(deleteButton);
+            this.createTask(taskList[i].id, taskList[i].task, taskList[i].completed);
         }
-
-        const checkboxes = document.querySelectorAll('.checkbox');
-
-        checkboxes.forEach(el => {
-            el.addEventListener('change', this.changeStatus);
-        })
-
-        const deleteButtons = document.querySelectorAll('.deleteBtn');
-
-        deleteButtons.forEach(btn => {
-            btn.addEventListener('click', this.removeTask);
-        })
     }
 }
 
 const toDo = new ToDoList();
+toDo.render();
