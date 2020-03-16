@@ -26,10 +26,12 @@ class ToDoList {
             }
         });
         this.taskSection = document.querySelector('.toDoTasks');
+        this.searchInput = document.getElementById('searchInput');
+        this.searchInput.addEventListener('input', this.searchTasks)
     }
 
     createTask = (taskId, task, completed = false) => {
-        //Crate containter for task
+        //Create containter for task
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('task');
         this.taskSection.appendChild(taskContainer);
@@ -109,9 +111,17 @@ class ToDoList {
         }
     }
 
-    render = () => {
-        const taskList = this.toDoTasks;
+    searchTasks = () => {
+        const searchText = searchInput.value.toLowerCase();
+        let tasks = this.toDoTasks;
 
+        tasks = tasks.filter(el => el.task.toLowerCase().includes(searchText));
+        this.taskSection.textContent = '';
+
+        this.render(tasks);
+    }
+
+    render = (taskList = this.toDoTasks) => {
         for (let i = 0; i < taskList.length; i++) {
             this.createTask(taskList[i].id, taskList[i].task, taskList[i].completed);
         }
