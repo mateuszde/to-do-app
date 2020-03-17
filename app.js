@@ -1,22 +1,6 @@
 class ToDoList {
     constructor() {
-        this.toDoTasks = [
-            {
-                id: 1,
-                task: "zadanie 1",
-                completed: false
-            },
-            {
-                id: 2,
-                task: "zadanie 2",
-                completed: true
-            },
-            {
-                id: 3,
-                task: "zadanie 3",
-                completed: false
-            }
-        ];
+        this.toDoTasks = [];
 
         document.getElementById('addTaskBtn').addEventListener('click', this.addTask);
         this.inputAddTask = document.getElementById('addTaskInput');
@@ -78,6 +62,7 @@ class ToDoList {
         this.toDoTasks.push(taskItem);
         this.inputAddTask.value = '';
         this.inputAddTask.focus();
+        this.setLocalStorage();
 
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
@@ -90,6 +75,7 @@ class ToDoList {
             if (taskList[i].id == idOfTaskToDelete) {
                 taskList.splice(i, 1);
 
+                this.setLocalStorage();
                 e.target.parentNode.remove();
                 break;
             }
@@ -106,6 +92,7 @@ class ToDoList {
         for (let i = 0; i < taskList.length; i++) {
             if (taskList[i].id == idOfTaskToChange) {
                 taskList[i].completed = e.target.checked;
+                this.setLocalStorage();
                 break;
             }
         }
@@ -121,6 +108,10 @@ class ToDoList {
         this.render(tasks);
     }
 
+    setLocalStorage = () => {
+        localStorage.setItem('toDoTasks', JSON.stringify(this.toDoTasks));
+    }
+
     render = (taskList = this.toDoTasks) => {
         for (let i = 0; i < taskList.length; i++) {
             this.createTask(taskList[i].id, taskList[i].task, taskList[i].completed);
@@ -129,4 +120,10 @@ class ToDoList {
 }
 
 const toDo = new ToDoList();
+
+if (localStorage.hasOwnProperty('toDoTasks')) {
+    let storageTasks = localStorage.getItem('toDoTasks');
+    toDo.toDoTasks = JSON.parse(storageTasks);
+}
+
 toDo.render();
