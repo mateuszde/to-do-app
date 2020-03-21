@@ -1,6 +1,11 @@
 class ToDoList {
-    constructor() {
+    constructor(listName) {
         this.toDoTasks = [];
+        this.listName = listName;
+
+        if (localStorage.hasOwnProperty(this.listName)) {
+            this.toDoTasks = JSON.parse(localStorage.getItem(this.listName));
+        }
 
         document.getElementById('addTaskBtn').addEventListener('click', this.addTask);
         this.inputAddTask = document.getElementById('addTaskInput');
@@ -15,7 +20,7 @@ class ToDoList {
     }
 
     createTask = (taskId, task, completed = false) => {
-        //Create containter for task
+        //Create container for task
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('task');
         this.taskSection.appendChild(taskContainer);
@@ -62,7 +67,7 @@ class ToDoList {
         this.toDoTasks.push(taskItem);
         this.inputAddTask.value = '';
         this.inputAddTask.focus();
-        this.setLocalStorage();
+        this.saveTasks();
 
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
@@ -71,15 +76,13 @@ class ToDoList {
         const taskList = this.toDoTasks;
         const idOfTaskToDelete = e.target.parentNode.dataset.key;
 
-        for (let i = 0; i < taskList.length; i++) {
-            if (taskList[i].id == idOfTaskToDelete) {
-                taskList.splice(i, 1);
+        let foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
+        const index = taskList.indexOf(foundedTask);
 
-                this.setLocalStorage();
-                e.target.parentNode.remove();
-                break;
-            }
-        }
+        taskList.splice(index, 1);
+        e.target.parentNode.remove();
+
+        this.saveTasks();
     }
 
     changeStatus = (e) => {
@@ -89,13 +92,9 @@ class ToDoList {
         //Change class on task
         e.target.parentNode.childNodes[0].classList.toggle('done');
 
-        for (let i = 0; i < taskList.length; i++) {
-            if (taskList[i].id == idOfTaskToChange) {
-                taskList[i].completed = e.target.checked;
-                this.setLocalStorage();
-                break;
-            }
-        }
+        const foundedTask = taskList.find(item => item.id == idOfTaskToChange);
+        foundedTask.completed = e.target.checked;
+        this.saveTasks();
     }
 
     searchTasks = () => {
@@ -108,7 +107,7 @@ class ToDoList {
         this.render(tasks);
     }
 
-    setLocalStorage = () => {
+    saveTasks = () => {
         localStorage.setItem('toDoTasks', JSON.stringify(this.toDoTasks));
     }
 
@@ -119,11 +118,5 @@ class ToDoList {
     }
 }
 
-const toDo = new ToDoList();
-
-if (localStorage.hasOwnProperty('toDoTasks')) {
-    let storageTasks = localStorage.getItem('toDoTasks');
-    toDo.toDoTasks = JSON.parse(storageTasks);
-}
-
+const toDo = new ToDoList('toDoTasks');
 toDo.render();
