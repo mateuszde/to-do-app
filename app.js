@@ -1,22 +1,11 @@
 class ToDoList {
-    constructor() {
-        this.toDoTasks = [
-            {
-                id: 1,
-                task: "zadanie 1",
-                completed: false
-            },
-            {
-                id: 2,
-                task: "zadanie 2",
-                completed: true
-            },
-            {
-                id: 3,
-                task: "zadanie 3",
-                completed: false
-            }
-        ];
+    constructor(listName) {
+        this.toDoTasks = [];
+        this.listName = listName;
+
+        if (localStorage.hasOwnProperty(this.listName)) {
+            this.toDoTasks = JSON.parse(localStorage.getItem(this.listName));
+        }
 
         document.getElementById('addTaskBtn').addEventListener('click', this.addTask);
         this.inputAddTask = document.getElementById('addTaskInput');
@@ -26,10 +15,12 @@ class ToDoList {
             }
         });
         this.taskSection = document.querySelector('.toDoTasks');
+        this.searchInput = document.getElementById('searchInput');
+        this.searchInput.addEventListener('input', this.searchTasks)
     }
 
     createTask = (taskId, task, completed = false) => {
-        //Crate containter for task
+        //Create container for task
         const taskContainer = document.createElement('div');
         taskContainer.classList.add('task');
         this.taskSection.appendChild(taskContainer);
@@ -76,6 +67,7 @@ class ToDoList {
         this.toDoTasks.push(taskItem);
         this.inputAddTask.value = '';
         this.inputAddTask.focus();
+        this.saveTasks();
 
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
@@ -83,40 +75,51 @@ class ToDoList {
     removeTask = (e) => {
         const taskList = this.toDoTasks;
         const idOfTaskToDelete = e.target.parentNode.dataset.key;
+        const foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
 
-        for (let i = 0; i < taskList.length; i++) {
-            if (taskList[i].id == idOfTaskToDelete) {
-                taskList.splice(i, 1);
+        if (foundedTask) {
+            const index = taskList.indexOf(foundedTask);
+            taskList.splice(index, 1);
+            e.target.parentNode.remove();
 
-                e.target.parentNode.remove();
-                break;
-            }
+            this.saveTasks();
         }
     }
 
     changeStatus = (e) => {
         const taskList = this.toDoTasks
         const idOfTaskToChange = e.target.parentNode.dataset.key;
+        const foundedTask = taskList.find(item => item.id == idOfTaskToChange);
 
-        //Change class on task
-        e.target.parentNode.childNodes[0].classList.toggle('done');
+        if (foundedTask) {
+            //Change class on task
+            e.target.parentNode.childNodes[0].classList.toggle('done');
 
-        for (let i = 0; i < taskList.length; i++) {
-            if (taskList[i].id == idOfTaskToChange) {
-                taskList[i].completed = e.target.checked;
-                break;
-            }
+            foundedTask.completed = e.target.checked;
+            this.saveTasks();
         }
     }
 
-    render = () => {
-        const taskList = this.toDoTasks;
+    searchTasks = () => {
+        const searchText = searchInput.value.toLowerCase();
+        let tasks = this.toDoTasks;
 
+        tasks = tasks.filter(el => el.task.toLowerCase().includes(searchText));
+        this.taskSection.textContent = '';
+
+        this.render(tasks);
+    }
+
+    saveTasks = () => {
+        localStorage.setItem(this.listName, JSON.stringify(this.toDoTasks));
+    }
+
+    render = (taskList = this.toDoTasks) => {
         for (let i = 0; i < taskList.length; i++) {
             this.createTask(taskList[i].id, taskList[i].task, taskList[i].completed);
         }
     }
 }
 
-const toDo = new ToDoList();
+const toDo = new ToDoList('toDoTasks');
 toDo.render();
