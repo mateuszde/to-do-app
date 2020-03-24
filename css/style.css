@@ -1,0 +1,247 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  font-size: 10px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #1a1a1a;
+}
+
+.wrap {
+  width: 100%;
+  min-height: 100%;
+  color: #e2e0e0;
+}
+
+.addTaskContainer, .searchTaskContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+  padding: 15px 30px;
+  border-radius: 3px;
+  background-color: rgba(37, 37, 37, 0.95);
+  z-index: 1;
+}
+
+.addTaskContainer .form__group,
+.searchTaskContainer .form__group {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  margin-left: 20px;
+}
+
+.searchTaskContainer {
+  top: unset;
+  left: 0;
+  bottom: 0;
+}
+
+.searchTaskContainer .searchIconContainer {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  font-size: 30px;
+}
+
+.searchTaskContainer .fa-search {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+.form__group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.form__field {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  color: #FFF;
+  background: transparent;
+  -webkit-transition: border-color 0.2s;
+  transition: border-color 0.2s;
+}
+
+.form__field::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form__field:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form__field::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 2em;
+  cursor: text;
+  top: 32px;
+}
+
+.form__label {
+  position: absolute;
+  left: 0;
+  display: block;
+  color: gray;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  -o-border-image: linear-gradient(to right, #e2e0e0, rgba(37, 37, 37, 0.95));
+     border-image: -webkit-gradient(linear, left top, right top, from(#e2e0e0), to(rgba(37, 37, 37, 0.95)));
+     border-image: linear-gradient(to right, #e2e0e0, rgba(37, 37, 37, 0.95));
+  border-image-slice: 1;
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: -15px;
+  display: block;
+  -webkit-transition: .2s;
+  transition: .2s;
+  font-size: 2em;
+  color: #e2e0e0;
+  font-weight: bold;
+}
+
+.toDoTasks {
+  margin-top: 100px;
+  padding: 0 30px;
+}
+
+.addBtn {
+  display: inline-block;
+  padding: 10px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+
+.addBtnBox {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  position: relative;
+  color: #e2e0e0;
+}
+
+.addBtnInner {
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.addBtnInner::before {
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%) rotate(90deg);
+          transform: translateY(-50%) rotate(90deg);
+}
+
+.task {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  margin-bottom: 2px;
+  padding: 10px 20px;
+  background-color: #252525;
+  -webkit-transition: background-color .2s .2s ease-in-out;
+  transition: background-color .2s .2s ease-in-out;
+}
+
+.task:hover {
+  background-color: #313131;
+}
+
+.task .taskText {
+  width: 90%;
+  margin-left: 20px;
+  font-size: 1.7em;
+}
+
+.task .deleteBtn {
+  position: relative;
+  height: 25px;
+  width: 25px;
+  margin-left: 20px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.task .deleteBtn::after, .task .deleteBtn::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #CC0001;
+}
+
+.task .deleteBtn::after {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.task .deleteBtn::before {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.task .checkbox {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.done {
+  color: darkgray;
+  text-decoration: line-through;
+}
+/*# sourceMappingURL=style.css.map */

@@ -12,8 +12,8 @@ body {
 .wrap {
     width: 100%;
     min-height: 100vh;
-    background: #23074d;
-    background: linear-gradient(to left, #cc5333, #23074d);
+    /* background: #23074d;
+    background: linear-gradient(to left, #cc5333, #23074d); */
 }
 
 h1 {

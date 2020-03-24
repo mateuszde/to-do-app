@@ -7,28 +7,37 @@
     <title>To Do List App</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap&subset=latin-ext" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/ac03ed7f96.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div class="wrap">
-        <div class="toDoListApp">
-            <h1>TO DO LIST</h1>
-
-            <section class="form">
-                <div class="row">
-                    <input type="text" placeholder="Wprowadź zadanie" class="inputArea" id="addTaskInput">
-                    <button type="submit" id="addTaskBtn">Dodaj</button>
-                </div>
-                <div class="row">
-                    <input type="text" placeholder="Wyszukaj" class="inputArea" id="searchInput">
-                </div>
-            </section>
-
-            <section class="toDoTasks">
-            </section>
+        <div class="searchTaskContainer">
+            <div class="searchIconContainer">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="form__group field">
+                <input type="input" placeholder="Wyszukaj" class="form__field" name="searchInput" id="searchInput">
+                <label for="searchInput" class="form__label">Wyszukaj</label>
+            </div>
         </div>
+
+        <div class="addTaskContainer">
+            <button type="submit" title="Dodaj zadanie" class="addBtn" id="addTaskBtn">
+                <span class="addBtnBox">
+                    <span class="addBtnInner"></span>
+                </span>
+            </button>
+            <div class="form__group field">
+                <input type="input" placeholder="Dodaj zadanie" class="form__field" name="addTaskInput"
+                    id="addTaskInput">
+                <label for="addTaskInput" class="form__label">Dodaj zadanie</label>
+            </div>
+        </div>
+
+        <section class="toDoTasks">
+        </section>
     </div>
     <script src="./app.js"></script>
 </body>

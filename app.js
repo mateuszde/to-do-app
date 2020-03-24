@@ -26,12 +26,6 @@ class ToDoList {
         this.taskSection.appendChild(taskContainer);
         taskContainer.dataset.key = taskId;
 
-        //Create task
-        const contentOfTask = document.createElement('p');
-        contentOfTask.classList.add('taskText');
-        contentOfTask.textContent = task;
-        taskContainer.appendChild(contentOfTask);
-
         //Create checkbox to mark task as completed
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -40,6 +34,12 @@ class ToDoList {
         taskContainer.appendChild(checkbox);
         checkbox.addEventListener('change', this.changeStatus);
 
+        //Create task
+        const contentOfTask = document.createElement('p');
+        contentOfTask.classList.add('taskText');
+        contentOfTask.textContent = task;
+        taskContainer.appendChild(contentOfTask);
+
         if (checkbox.checked) {
             contentOfTask.classList.add('done');
         }
@@ -47,7 +47,7 @@ class ToDoList {
         //Create button to delete task
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('deleteBtn');
-        deleteButton.textContent = 'usuń';
+        // deleteButton.textContent = 'usuń';
         taskContainer.appendChild(deleteButton);
         deleteButton.addEventListener('click', this.removeTask);
     }
@@ -93,7 +93,7 @@ class ToDoList {
 
         if (foundedTask) {
             //Change class on task
-            e.target.parentNode.childNodes[0].classList.toggle('done');
+            e.target.parentNode.childNodes[1].classList.toggle('done');
 
             foundedTask.completed = e.target.checked;
             this.saveTasks();
