@@ -1,0 +1,234 @@
+$dark: rgb(19, 19, 19);
+$red: #CC0001;
+$dark-gray: #1a1a1a;
+$light-gray: rgb(37, 37, 37);
+$lighter-gray: rgb(49, 49, 49);
+$light-gray-transparent: rgba(37, 37, 37, 0.95);
+$light: rgb(226, 224, 224);
+
+$white: #FFF;
+
+$primary: #11998e;
+$secondary: #38ef7d;
+
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 10px;
+    font-family: 'Roboto', sans-serif;
+    background-color: $dark-gray;
+}
+
+.wrap {
+    width: 100%;
+    min-height: 100%;
+    color: $light;
+}
+
+.addTaskContainer, .searchTaskContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 30px;
+    border-radius: 3px;
+    background-color: $light-gray-transparent;
+    z-index: 1;
+}
+
+.addTaskContainer .form__group,
+.searchTaskContainer .form__group {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.searchTaskContainer {
+    top: unset;
+    left: 0;
+    bottom: 0;
+
+    .searchIconContainer {
+        position: relative;
+        display: inline-block;
+        padding: 10px;
+        color: white;
+        font-size: 30px;
+    }
+
+    .fa-search {
+        transform: rotate(90deg);
+    }
+}
+
+.form__group {
+    position: relative;
+    padding: 15px 0 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.form__field {
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid gray;
+    outline: 0;
+    color: $white;
+    background: transparent;
+    transition: border-color 0.2s;
+  
+    &::placeholder {
+      color: transparent;
+    }
+  
+    &:placeholder-shown ~ .form__label {
+      font-size: 2em;
+      cursor: text;
+      top: 32px;
+    }
+}
+
+.form__label {
+    position: absolute;
+    left: 0;
+    display: block;
+    color: gray;
+}
+
+.form__field:focus {
+
+    ~ .form__label {
+        position: absolute;
+        top: -15px;
+        display: block;
+        transition: .2s;
+        font-size: 2em;
+        color: $light;
+        font-weight: bold;
+    }
+
+    padding-bottom: 6px;  
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, $light,$light-gray-transparent);
+    border-image-slice: 1;
+}
+
+.toDoTasks {
+    margin-top: 100px;
+    padding: 0 30px;
+}
+
+.addBtn {
+    display: inline-block;
+    padding: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+}
+
+.addBtnBox {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    position: relative;
+    color: $light;
+}
+
+@mixin addBtn-line {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    position: absolute;
+}
+
+.addBtnInner {
+    @include addBtn-line();
+
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.addBtnInner::before {
+    @include addBtn-line();
+    
+    content: '';
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+} 
+
+.task {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2px;
+    padding: 10px 20px;
+    background-color: $light-gray;
+    transition: background-color .2s .2s ease-in-out;
+
+    &:hover {
+        background-color: $lighter-gray;
+    }
+    
+    .taskText {
+        width: 90%;
+        margin-left: 20px;
+        font-size: 1.7em;
+    }
+
+    .deleteBtn {
+        position: relative;
+        height: 25px;
+        width: 25px;
+        margin-left: 20px;
+        border: 0;
+        cursor: pointer;
+        background-color: transparent;
+    }
+
+    @mixin deleteBtn-line {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+    }
+
+    .deleteBtn::after, .deleteBtn::before {
+        @include deleteBtn-line();
+
+        background-color: $red;
+    }
+
+    .deleteBtn::after {
+        transform: rotate(-45deg);
+    }
+
+    .deleteBtn::before {
+        transform: rotate(45deg);
+    }
+
+    .checkbox {
+        height: 20px;
+        width: 20px;
+        cursor: pointer;
+    }
+}
+
+.done {
+    color: darkgray;
+    text-decoration: line-through;
+}
+
