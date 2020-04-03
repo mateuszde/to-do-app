@@ -2,7 +2,7 @@ class ToDoList {
     constructor(listName) {
         this.toDoTasks = [];
         this.listName = listName;
-        this.editingHelp = [];
+        this.editingTaskTemp = [];
 
         if (localStorage.hasOwnProperty(this.listName)) {
             this.toDoTasks = JSON.parse(localStorage.getItem(this.listName));
@@ -100,18 +100,34 @@ class ToDoList {
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
 
+    findId = (obj, nameOfKey) => {
+        if (Object.keys(obj.dataset)[0] == nameOfKey) {
+            const objectWithKey = obj;
+            console.log(objectWithKey);
+            return objectWithKey;
+        }
+        else {
+            this.findId(obj.parentNode, nameOfKey);
+        }
+    }
+
     removeTask = (e) => {
         const taskList = this.toDoTasks;
-        const idOfTaskToDelete = e.target.parentNode.parentNode.dataset.key;
-        const foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
+        const objectToDelete = this.findId(e.target, 'key');
+        console.log(`Obiekt do skasowania: ${objectToDelete}`);
 
-        if (foundedTask) {
-            const index = taskList.indexOf(foundedTask);
-            taskList.splice(index, 1);
-            e.target.parentNode.parentNode.remove();
+        const idOfTaskToDelete = objectToDelete.dataset.key;
+        console.log(`Id taska do skasowania: ${idOfTaskToDelete}`);
 
-            this.saveTasks();
-        }
+        // const foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
+
+        // if (foundedTask) {
+        //     const index = taskList.indexOf(foundedTask);
+        //     taskList.splice(index, 1);
+        //     e.target.parentNode.parentNode.remove();
+
+        //     this.saveTasks();
+        // }
     }
 
     handleClickEdit = (e) => {
@@ -122,7 +138,7 @@ class ToDoList {
         const foundedTask = taskList.find(item => item.id == idOfTaskToChange);
 
         if (foundedTask) {
-            this.editingHelp[0] = foundedTask;
+            this.editingTaskTemp = foundedTask;
             this.changeTaskInput.value = foundedTask.task;
         }
     }
@@ -131,7 +147,7 @@ class ToDoList {
         e.preventDefault();
 
         const taskList = this.toDoTasks;
-        const idOfTaskToUpdate = this.editingHelp[0].id;
+        const idOfTaskToUpdate = this.editingTaskTemp.id;
         const newTaskContent = this.changeTaskInput.value;
 
         const foundedTaskInTable = taskList.find(item => item.id == idOfTaskToUpdate);
@@ -139,13 +155,9 @@ class ToDoList {
             foundedTaskInTable.task = newTaskContent;
         }
 
-        const tasksFromDOM = [...document.querySelectorAll('.task')];
-        const foundedTaskDOM = tasksFromDOM.find(item => item.dataset.key == idOfTaskToUpdate);
-        if (foundedTaskDOM) {
-            foundedTaskDOM.childNodes[1].textContent = newTaskContent;
-        }
-
         this.saveTasks();
+        this.render();
+
         this.changeTaskInput.value = "";
         this.changeSection.classList.toggle('active');
     }
@@ -184,6 +196,8 @@ class ToDoList {
     }
 
     render = (taskList = this.toDoTasks) => {
+        this.taskSection.textContent = "";
+
         for (let i = 0; i < taskList.length; i++) {
             this.createTask(taskList[i].id, taskList[i].task, taskList[i].completed);
         }
