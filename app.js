@@ -2,7 +2,7 @@ class ToDoList {
     constructor(listName) {
         this.toDoTasks = [];
         this.listName = listName;
-        this.editingTaskTemp = [];
+        this.editingTaskTemp = "";
 
         if (localStorage.hasOwnProperty(this.listName)) {
             this.toDoTasks = JSON.parse(localStorage.getItem(this.listName));
@@ -100,41 +100,36 @@ class ToDoList {
         this.createTask(taskItem.id, taskItem.task, taskItem.completed);
     }
 
-    findId = (obj, nameOfKey) => {
+    findParentObjectWithSpecificProperty = (obj, nameOfKey) => {
         if (Object.keys(obj.dataset)[0] == nameOfKey) {
-            const objectWithKey = obj;
-            console.log(objectWithKey);
-            return objectWithKey;
+            return obj;
         }
         else {
-            this.findId(obj.parentNode, nameOfKey);
+            return this.findParentObjectWithSpecificProperty(obj.parentNode, nameOfKey);
         }
     }
 
     removeTask = (e) => {
         const taskList = this.toDoTasks;
-        const objectToDelete = this.findId(e.target, 'key');
-        console.log(`Obiekt do skasowania: ${objectToDelete}`);
-
+        const objectToDelete = this.findParentObjectWithSpecificProperty(e.target, 'key');
         const idOfTaskToDelete = objectToDelete.dataset.key;
-        console.log(`Id taska do skasowania: ${idOfTaskToDelete}`);
 
-        // const foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
+        const foundedTask = taskList.find(item => item.id == idOfTaskToDelete);
+        if (foundedTask) {
+            const index = taskList.indexOf(foundedTask);
+            taskList.splice(index, 1);
+            e.target.parentNode.parentNode.remove();
 
-        // if (foundedTask) {
-        //     const index = taskList.indexOf(foundedTask);
-        //     taskList.splice(index, 1);
-        //     e.target.parentNode.parentNode.remove();
-
-        //     this.saveTasks();
-        // }
+            this.saveTasks();
+        }
     }
 
     handleClickEdit = (e) => {
         this.changeSection.classList.toggle('active');
 
         const taskList = this.toDoTasks;
-        const idOfTaskToChange = e.target.parentNode.parentNode.dataset.key;
+        const objectToChange = this.findParentObjectWithSpecificProperty(e.target, 'key');
+        const idOfTaskToChange = objectToChange.dataset.key;
         const foundedTask = taskList.find(item => item.id == idOfTaskToChange);
 
         if (foundedTask) {
@@ -169,12 +164,13 @@ class ToDoList {
 
     changeStatus = (e) => {
         const taskList = this.toDoTasks;
-        const idOfTaskToChange = e.target.parentNode.dataset.key;
+        const objectToChange = this.findParentObjectWithSpecificProperty(e.target, 'key');
+        const idOfTaskToChange = objectToChange.dataset.key;
         const foundedTask = taskList.find(item => item.id == idOfTaskToChange);
 
         if (foundedTask) {
             //Change class on task
-            e.target.parentNode.childNodes[1].classList.toggle('done');
+            objectToChange.childNodes[1].classList.toggle('done');
 
             foundedTask.completed = e.target.checked;
             this.saveTasks();
@@ -186,7 +182,6 @@ class ToDoList {
         let tasks = this.toDoTasks;
 
         tasks = tasks.filter(el => el.task.toLowerCase().includes(searchText));
-        this.taskSection.textContent = '';
 
         this.render(tasks);
     }
